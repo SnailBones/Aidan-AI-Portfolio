@@ -150,7 +150,7 @@ def cluster(points, k):
 		#print old_domains
 	return domains;
 
-def test(clusters, k = 10):
+def test(clusters, titles, k = 10):
 	c = 0
 	size = 0
 	for centroid in clusters:
@@ -159,25 +159,28 @@ def test(clusters, k = 10):
 		print "size ", len(clusters[centroid].my_data)
 		size += len(clusters[centroid].my_data)
 		for i in range(k):
-			movie = random.choice(clusters[centroid].my_data.keys())
+			movie = int(random.choice(clusters[centroid].my_data.keys()))
 			#human = random.choice(clusters[centroid].my_data[movie].keys())
 			#rating = clusters[centroid].my_data[movie][human]
 			print "movie #", movie
+			print titles[movie-1]
 		print "total size ", size
 
 
-def loadDataset(filename='u.data'):
-	in_data = np.genfromtxt(filename)
+def loadDataset(filename1='ml-100k/u.data', filename2 = 'ml-100k/u.item'):
+	in_data = np.genfromtxt(filename1)
+	titles = open(filename2).readlines()
 	#person movie rating
 	#initialize sparse vector
 	movies = SparseVector()
+
 	for row in in_data:
 		movies.setMe(row[1],row[0],row[2])
-	return movies
+	return movies, titles
 
 if __name__=="__main__":
-	movies = loadDataset()
+	movies, titles = loadDataset()
 	clusters = cluster(movies, 20)
-	test(clusters)
+	test(clusters, titles)
 
 #1682 movies
